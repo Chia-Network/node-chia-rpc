@@ -13,5 +13,5 @@
         "target": "ESNext",
         "outDir": "dist"
     },
-    "include": ["src", "test"]
+    "include": ["src"]
 }
