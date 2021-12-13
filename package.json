@@ -1,0 +1,21 @@
+{
+    "name": "@rigidity/chia",
+    "author": "rigidity",
+    "version": "1.0.0",
+    "repository": "https://github.com/Rigidity/chia.git",
+    "main": "dist/src/index.js",
+    "types": "dist/src/index.d.ts",
+    "license": "MIT",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "test": "mocha './dist/test/**/*.js' --require source-map-support/register --recursive --timeout 0"
+    },
+    "devDependencies": {
+        "@types/node": "^16.11.9",
+        "source-map-support": "^0.5.21"
+    },
+    "dependencies": {}
+}
