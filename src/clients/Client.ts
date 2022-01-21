@@ -1,34 +1,77 @@
-import { Config } from '../types/Config.js';
-import fs from 'fs';
-import path from 'path';
 import axios from 'axios';
-import { Response } from './Response.js';
+import fs from 'fs';
 import { Agent } from 'https';
 import jsyaml from 'js-yaml';
 import { homedir } from 'os';
+import path from 'path';
+import { Config } from '../types/Config.js';
+import { Response } from './Response.js';
+
+export interface ClientOptions {
+    host: string;
+    port: number;
+    protocol: 'http' | 'https';
+    keyPath: string;
+    certPath: string;
+    caCertPath: string;
+}
 
 export abstract class Client {
-    public abstract port: number;
-    public config: Config;
-    public rootPath: string;
     public host: string;
+    public port: number | null;
+    public protocol: 'http' | 'https';
     public keyPath: string;
     public certPath: string;
     public caCertPath: string | boolean;
     public agent: Agent;
+    public config: Config | null;
+    public options: ClientOptions | null;
+
     public get baseUrl(): string {
-        return `https://${this.host}:${this.port}`;
+        return `${this.protocol}://${this.host}:${this.port}`;
     }
 
-    constructor(root: string = path.resolve(homedir(), '.chia', 'mainnet')) {
-        this.rootPath = path.resolve(root);
-        this.config = jsyaml.load(
-            fs.readFileSync(path.join(root, 'config', 'config.yaml'), 'utf-8')
-        ) as Config;
-        this.keyPath = path.join(root, this.config.daemon_ssl.private_key);
-        this.certPath = path.join(root, this.config.daemon_ssl.private_crt);
-        this.caCertPath = path.join(root, this.config.private_ssl_ca.crt);
-        this.host = this.config.self_hostname;
+    constructor(
+        options: ClientOptions | string = path.resolve(
+            homedir(),
+            '.chia',
+            'mainnet'
+        )
+    ) {
+        if (typeof options === 'string') {
+            const rootPath = path.resolve(options);
+            this.config = jsyaml.load(
+                fs.readFileSync(
+                    path.join(rootPath, 'config', 'config.yaml'),
+                    'utf-8'
+                )
+            ) as Config;
+            this.options = null;
+            this.keyPath = path.join(
+                options,
+                this.config.daemon_ssl.private_key
+            );
+            this.certPath = path.join(
+                options,
+                this.config.daemon_ssl.private_crt
+            );
+            this.caCertPath = path.join(
+                options,
+                this.config.private_ssl_ca.crt
+            );
+            this.host = this.config.self_hostname;
+            this.port = null;
+            this.protocol = 'https';
+        } else {
+            this.config = null;
+            this.options = options;
+            this.keyPath = options.keyPath;
+            this.certPath = options.certPath;
+            this.caCertPath = options.caCertPath;
+            this.host = options.host;
+            this.port = options.port;
+            this.protocol = options.protocol;
+        }
         this.agent = new Agent({
             ...(typeof this.caCertPath !== 'boolean'
                 ? { ca: fs.readFileSync(this.caCertPath) }

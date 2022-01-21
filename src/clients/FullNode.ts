@@ -1,3 +1,4 @@
+import { ClientOptions } from '..';
 import { BlockRecord } from '../types/BlockRecord.js';
 import { CoinRecord } from '../types/CoinRecord.js';
 import { CoinSpend } from '../types/CoinSpend.js';
@@ -143,11 +144,9 @@ export interface GetMempoolItemByTxId {
 }
 
 export class FullNode extends Client {
-    public port: number;
-
-    constructor(root?: string) {
-        super(root);
-        this.port = this.config.full_node.rpc_port;
+    constructor(options: ClientOptions | string) {
+        super(options);
+        this.port ??= this.config!.full_node.rpc_port;
     }
 
     /**
