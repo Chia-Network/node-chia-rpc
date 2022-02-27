@@ -1,3 +1,6 @@
+export * from './clients/Client.js';
+export * from './clients/FullNode.js';
+export * from './clients/Response.js';
 export * from './types/BlockRecord.js';
 export * from './types/ChallengeChainSubSlot.js';
 export * from './types/ClassgroupElement.js';
@@ -29,6 +32,4 @@ export * from './types/TransactionsInfo.js';
 export * from './types/UnfinishedBlockHeader.js';
 export * from './types/VdfInfo.js';
 export * from './types/VdfProof.js';
-export * from './clients/Client.js';
-export * from './clients/FullNode.js';
-export * from './clients/Response.js';
+export * from './utils/address.js';
