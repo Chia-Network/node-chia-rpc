@@ -1,28 +1,28 @@
 import { bech32m } from 'bech32';
 
 export interface AddressInfo {
-    hash: Buffer;
+    hash: Uint8Array;
     prefix: string;
 }
 
-export function toAddress(hash: Buffer, prefix: string): string {
+export function toAddress(hash: Uint8Array, prefix: string): string {
     return bech32m.encode(prefix, convertBits(hash, 8, 5, true));
 }
 
 export function addressInfo(address: string): AddressInfo {
     const { words, prefix } = bech32m.decode(address);
     return {
-        hash: convertBits(Buffer.from(words), 5, 8, false),
+        hash: convertBits(Uint8Array.from(words), 5, 8, false),
         prefix,
     };
 }
 
 export function convertBits(
-    bytes: Buffer,
+    bytes: Uint8Array,
     from: number,
     to: number,
     pad: boolean
-): Buffer {
+): Uint8Array {
     let accumulate = 0;
     let bits = 0;
     let maxv = (1 << to) - 1;
@@ -42,5 +42,5 @@ export function convertBits(
     } else if (bits >= from || ((accumulate << (to - bits)) & maxv) != 0) {
         throw new Error('Could not convert bits.');
     }
-    return Buffer.from(result);
+    return Uint8Array.from(result);
 }
