@@ -33,4 +33,5 @@ export * from './types/UnfinishedBlockHeader.js';
 export * from './types/VdfInfo.js';
 export * from './types/VdfProof.js';
 export * from './utils/address.js';
+export * from './utils/hash.js';
 export * from './utils/hex.js';
