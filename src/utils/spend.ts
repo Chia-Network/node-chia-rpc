@@ -1,4 +1,4 @@
-import { AugSchemeMPL, JacobianPoint } from '@rigidity/bls-signatures';
+import { AugSchemeMPL, JacobianPoint } from 'chia-bls';
 import { SpendBundle } from '../types/SpendBundle';
 
 export function aggregateSpendBundles(

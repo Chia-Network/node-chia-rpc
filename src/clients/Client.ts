@@ -4,8 +4,8 @@ import { Agent } from 'https';
 import jsyaml from 'js-yaml';
 import { homedir } from 'os';
 import path from 'path';
-import { Config } from '../types/Config.js';
-import { Response } from './Response.js';
+import { Config } from '../types/Config';
+import { Response } from './Response';
 
 export interface ClientOptions {
     host: string;
