@@ -1,9 +1,4 @@
-import {
-    concatBytes,
-    encodeInt,
-    fromHex,
-    hash256,
-} from '@rigidity/bls-signatures';
+import { concatBytes, encodeInt, fromHex, hash256 } from 'chia-bls';
 import { Coin } from '../types/Coin';
 import { sanitizeHex } from './hex';
 

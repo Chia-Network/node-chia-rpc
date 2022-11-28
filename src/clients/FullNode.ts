@@ -1,15 +1,15 @@
 import { ClientOptions } from '..';
-import { BlockRecord } from '../types/BlockRecord.js';
-import { CoinRecord } from '../types/CoinRecord.js';
-import { CoinSpend } from '../types/CoinSpend.js';
-import { EndOfSubSlotBundle } from '../types/EndOfSubSlotBundle.js';
-import { FullBlock } from '../types/FullBlock.js';
-import { MempoolItem } from '../types/MempoolItem.js';
-import { SignagePoint } from '../types/SignagePoint.js';
-import { SpendBundle } from '../types/SpendBundle.js';
-import { UnfinishedBlockHeader } from '../types/UnfinishedBlockHeader.js';
-import { Client } from './Client.js';
-import { Response } from './Response.js';
+import { BlockRecord } from '../types/BlockRecord';
+import { CoinRecord } from '../types/CoinRecord';
+import { CoinSpend } from '../types/CoinSpend';
+import { EndOfSubSlotBundle } from '../types/EndOfSubSlotBundle';
+import { FullBlock } from '../types/FullBlock';
+import { MempoolItem } from '../types/MempoolItem';
+import { SignagePoint } from '../types/SignagePoint';
+import { SpendBundle } from '../types/SpendBundle';
+import { UnfinishedBlockHeader } from '../types/UnfinishedBlockHeader';
+import { Client } from './Client';
+import { Response } from './Response';
 
 export interface GetInitialFreezePeriod {
     INITIAL_FREEZE_END_TIMESTAMP: 1620061200;
