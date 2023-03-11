@@ -32,11 +32,8 @@ export abstract class Client {
     }
 
     constructor(
-        options: ClientOptions | string = path.resolve(
-            homedir(),
-            '.chia',
-            'mainnet'
-        )
+        options: ClientOptions | string = process.env.CHIA_ROOT ??
+            path.resolve(homedir(), '.chia', 'mainnet')
     ) {
         if (typeof options === 'string') {
             const rootPath = path.resolve(options);

@@ -144,7 +144,7 @@ export interface GetMempoolItemByTxId {
 }
 
 export class FullNode extends Client {
-    constructor(options: ClientOptions | string) {
+    constructor(options?: ClientOptions | string) {
         super(options);
         this.port ??= this.config!.full_node.rpc_port;
     }
