@@ -9,8 +9,6 @@ import { Response } from './Response';
 
 export interface ClientOptions {
     host: string;
-    port: number;
-    protocol: 'http' | 'https';
     keyPath: string;
     certPath: string;
     caCertPath: string;
@@ -18,8 +16,7 @@ export interface ClientOptions {
 
 export abstract class Client {
     public host: string;
-    public port: number | null;
-    public protocol: 'http' | 'https';
+    public port: number | null = null;
     public keyPath: string;
     public certPath: string;
     public caCertPath: string | boolean;
@@ -28,7 +25,9 @@ export abstract class Client {
     public options: ClientOptions | null;
 
     public get baseUrl(): string {
-        return `${this.protocol}://${this.host}:${this.port}`;
+        if (!this.port) throw new Error('Port is not set.');
+
+        return `https://${this.host}:${this.port}`;
     }
 
     constructor(
@@ -60,8 +59,6 @@ export abstract class Client {
                 this.config.private_ssl_ca.crt
             );
             this.host = this.config.self_hostname;
-            this.port = null;
-            this.protocol = 'https';
         } else {
             this.config = null;
             this.options = options;
@@ -69,16 +66,14 @@ export abstract class Client {
             this.certPath = options.certPath;
             this.caCertPath = options.caCertPath;
             this.host = options.host;
-            this.port = options.port;
-            this.protocol = options.protocol;
         }
         this.agent = new Agent({
-            ...(typeof this.caCertPath !== 'boolean'
+            ...(this.caCertPath
                 ? { ca: fs.readFileSync(this.caCertPath) }
                 : {}),
             cert: fs.readFileSync(this.certPath),
             key: fs.readFileSync(this.keyPath),
-            rejectUnauthorized: this.host !== 'localhost',
+            rejectUnauthorized: false,
         });
     }
 
