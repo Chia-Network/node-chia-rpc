@@ -143,10 +143,17 @@ export interface GetMempoolItemByTxId {
     mempool_item: MempoolItem;
 }
 
+export interface FullNodeOptions extends ClientOptions {
+    port: number;
+}
+
 export class FullNode extends Client {
-    constructor(options: ClientOptions | string) {
+    constructor(options: FullNodeOptions | string) {
         super(options);
-        this.port ??= this.config!.full_node.rpc_port;
+        this.port =
+            typeof options === 'string'
+                ? this.config!.full_node.rpc_port
+                : options.port;
     }
 
     /**
