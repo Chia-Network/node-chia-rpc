@@ -23,6 +23,14 @@ export type BlockchainState =
     | UninitializedBlockchainState
     | InitializedBlockchainState;
 
+export interface GetBlockCountMetrics {
+    metrics: {
+        compact_blocks: number;
+        hint_count: number;
+        uncompact_blocks: number;
+    };
+}
+
 export interface UninitializedBlockchainState {
     peak: null;
     genesis_challenge_initialized: false;
@@ -94,6 +102,16 @@ export interface GetUnfinishedBlockHeaders {
     headers: UnfinishedBlockHeader[];
 }
 
+export interface GetBlockSpends {
+    block_spends: CoinSpend[];
+}
+
+export interface GetRoutes {
+    routes: string[];
+}
+
+export interface Healthz {}
+
 export interface GetNetworkSpace {
     space: number;
 }
@@ -103,6 +121,10 @@ export interface GetCoinRecordsByPuzzleHash {
 }
 
 export interface GetCoinRecordsByPuzzleHashes {
+    coin_records: CoinRecord[];
+}
+
+export interface GetCoinRecordsByHint {
     coin_records: CoinRecord[];
 }
 
@@ -143,6 +165,24 @@ export interface GetMempoolItemByTxId {
     mempool_item: MempoolItem;
 }
 
+export interface GetFeeEstimate {
+    current_fee_rate: number;
+    estimates: number[];
+    fee_rate_last_block: number;
+    fees_last_block: number;
+    full_node_synced: boolean;
+    last_block_cost: number;
+    last_peak_timestamp: number;
+    last_tx_block_height: number;
+    mempool_fees: number;
+    mempool_max_size: number;
+    mempool_size: number;
+    node_time_utc: number;
+    num_spends: number;
+    peak_height: number;
+    target_times: number[];
+}
+
 export interface FullNodeOptions extends ClientOptions {
     port: number;
 }
@@ -169,6 +209,14 @@ export class FullNode extends Client {
 
     public async getBlockchainState(): Promise<Response<GetBlockchainState>> {
         return await this.request<GetBlockchainState>('get_blockchain_state');
+    }
+
+    public async getBlockCountMetrics(): Promise<
+        Response<GetBlockCountMetrics>
+    > {
+        return await this.request<GetBlockCountMetrics>(
+            'get_block_count_metrics'
+        );
     }
 
     public async getNetworkInfo(): Promise<Response<GetNetworkInfo>> {
@@ -239,12 +287,17 @@ export class FullNode extends Client {
     public async getBlockRecord(
         headerHash: string
     ): Promise<Response<GetBlockRecord>> {
-        return await this.request<GetBlockRecord>(
-            'get_block_record_by_height',
-            {
-                header_hash: headerHash,
-            }
-        );
+        return await this.request<GetBlockRecord>('get_block_record', {
+            header_hash: headerHash,
+        });
+    }
+
+    public async getBlockSpends(
+        headerHash: string
+    ): Promise<Response<GetBlockSpends>> {
+        return await this.request<GetBlockSpends>('get_block_spends', {
+            header_hash: headerHash,
+        });
     }
 
     public async getUnfinishedBlockHeaders(): Promise<
@@ -292,6 +345,23 @@ export class FullNode extends Client {
             'get_coin_records_by_puzzle_hashes',
             {
                 puzzle_hashes: puzzleHashes,
+                start_height: startHeight,
+                end_height: endHeight,
+                include_spent_coins: includeSpentCoins,
+            }
+        );
+    }
+
+    public async getCoinRecordsByHint(
+        hint: string,
+        startHeight?: number,
+        endHeight?: number,
+        includeSpentCoins?: boolean
+    ): Promise<Response<GetCoinRecordsByHint>> {
+        return await this.request<GetCoinRecordsByHint>(
+            'get_coin_records_by_hint',
+            {
+                hint,
                 start_height: startHeight,
                 end_height: endHeight,
                 include_spent_coins: includeSpentCoins,
@@ -387,5 +457,13 @@ export class FullNode extends Client {
                 tx_id: txId,
             }
         );
+    }
+
+    public async getRoutes(): Promise<Response<GetRoutes>> {
+        return await this.request<GetRoutes>('get_routes');
+    }
+
+    public async healthz(): Promise<Response<Healthz>> {
+        return await this.request<Healthz>('healthz');
     }
 }
